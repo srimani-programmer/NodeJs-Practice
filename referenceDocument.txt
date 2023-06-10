@@ -1,0 +1,98 @@
+Create Operations
+-----------------
+
+1. Create an Instance of the Model Object
+2. Call the save() with await keyword (Since save operation will take sometime to store the data in mongodb)
+
+Eg:
+---
+
+const student = new Student(
+    {
+        "name": "John",
+        "age": 27
+    }
+);
+
+const result = await student.save(); // The result Object contains the newly created object.
+
+Read Operations
+---------------
+
+The read operations can be done in many ways based on the data that we need to attain from the database. Total we have 3 functions in mongoose to perform this operation
+
+1. find() - It is used to fetch the multiple records in the format of array as a result from the db based on the given condition.
+2. findOne() - It is used to fetch only one record from the db based on the given condition, end result will be in object format. 
+3. findById() - It is used to fetch single record from db based on ObjectId(_id) from db. It returns result in object format.
+
+Eg:
+---
+1. AND(&&) Operation:
+---------------------
+
+const result = await Student.find({
+    age: {$gte: 18},
+    name: {$regex: 'Pet', $options: 'i'} // This is for Case Insensitive Regular Expression Checking.
+}).exec();
+
+2. OR(||) Operation:
+--------------------
+
+const result = await Student.find(
+    {
+        $or: [
+            {
+                age: {$gte: 10}
+            },
+            {
+                age: {$lte: 18}
+            }
+        ]
+    }
+).exec(); 
+
+Numerical Comparison Operations:
+--------------------------------
+1. $gt - Greater Than.
+2. $lt - Less Than. 
+3. $gte - Greater Than or Equal
+4. $lte - Less Than or Equal
+5. $ne - Not Equal to
+6. $eq - Equals
+7. $inc - To Perform the Increment Operation on Numerical value in db.
+
+Useful Methods used in Read Operations:
+---------------------------------------
+1. select() - It is used to filter the fields of a record based on the given object.
+2. sort() - It is used to sort the result set based on the given object.
+3. limit() - It is used to limit the number to records to be displayed based on the given numerical value.
+
+Update Opereations:
+-------------------
+
+We have mainly 4 methods to update the records in db.
+
+1. findOneAndUpdate() - It is used to update the record based on the given condition.
+2. findByIdAndUpdate() - It is used to update the record based on the Object(_id).
+3. updateOne() - It is used to update the record based on the given condition.
+4. UpdateMany() - It is used update multiple records based on the given condition.
+
+Note:
+-----
+1. The first three functions will update the first occurance in the list of documents available in the db.
+2. It is better to use findOneAndUpdate() function rather that using updateOne() because of it's simplicity.
+
+Eg:
+---
+
+const result = await Student.findOneAndUpdate({
+        age: {$gt: 18}
+    },
+    {
+        updated: true // The new update object
+    }, 
+    {
+        new: true // This will return the updated record as a result.
+    }
+).exec();
+
